@@ -16,8 +16,7 @@ namespace Example3
       //
       // If you would like to provide the secure connection, you should
       // create a new instance with the 'secure' parameter set to true or
-      // with an https scheme HTTP URL.
-
+      // with an https scheme HTTP URL.      
       var httpsv = new HttpServer (4649);
       //var httpsv = new HttpServer (5963, true);
 
@@ -82,8 +81,7 @@ namespace Example3
       //httpsv.ReuseAddress = true;
 
       // Set the document root path.
-      httpsv.DocumentRootPath = ConfigurationManager.AppSettings["DocumentRootPath"];
-
+      //httpsv.DocumentRootPath = ConfigurationManager.AppSettings["DocumentRootPath"];
       // Set the HTTP GET request event.
       httpsv.OnGet += (sender, e) => {
           var req = e.Request;
@@ -92,29 +90,35 @@ namespace Example3
           var path = req.RawUrl;
 
           if (path == "/")
-            path += "index.html";
+              path += "index.html";
 
           byte[] contents;
 
-          if (!e.TryReadFile (path, out contents)) {
-            res.StatusCode = (int) HttpStatusCode.NotFound;
+          //if (!e.TryReadFile(path, out contents))
+          //{
+          //    res.StatusCode = (int)HttpStatusCode.NotFound;
 
-            return;
-          }
+          //    return;
+          //}
 
-          if (path.EndsWith (".html")) {
-            res.ContentType = "text/html";
-            res.ContentEncoding = Encoding.UTF8;
-          }
-          else if (path.EndsWith (".js")) {
-            res.ContentType = "application/javascript";
-            res.ContentEncoding = Encoding.UTF8;
-          }
+          //if (path.EndsWith(".html"))
+          //{
+          //    res.ContentType = "text/html";
+          //    res.ContentEncoding = Encoding.UTF8;
+          //}
+          //else if (path.EndsWith(".js"))
+          //{
+          //    res.ContentType = "application/javascript";
+          //    res.ContentEncoding = Encoding.UTF8;
+          //}
 
-          res.ContentLength64 = contents.LongLength;
-
-          res.Close (contents, true);
-        };
+          //res.ContentLength64 = contents.LongLength;
+          //res.ContentType = "video/x-flv";          
+          res.ContentType = "text/html";          
+          res.StatusCode = (int)HttpStatusCode.OK;
+          res.ContentEncoding = Encoding.UTF8;
+          res.Close ( new byte[] {0x67,0x68}, true);
+      };
 
       // Add the WebSocket services.
       httpsv.AddWebSocketService<Echo> ("/Echo");
